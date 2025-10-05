@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FriendSpark Prompter</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Get authentic conversation suggestions to deepen friendships. All processing happens on your device.">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="app-title">FriendSpark Prompter</h1>
+            <div class="privacy-badge">
+                <span class="privacy-icon">🔒</span>
+                <span class="privacy-text">All on your device</span>
+            </div>
+        </header>
+
+        <!-- Input Section -->
+        <section class="input-section card">
+            <div class="card__body">
+                <div class="form-group">
+                    <label for="message-input" class="form-label">Friend's Message</label>
+                    <textarea 
+                        id="message-input" 
+                        class="form-control message-textarea"
+                        placeholder="Paste their last message—get 3 ways to move closer"
+                        rows="4"
+                        aria-describedby="input-help"
+                    ></textarea>
+                    <div id="input-help" class="input-help">Your text never leaves this page</div>
+                </div>
+
+                <!-- Tone Selection -->
+                <div class="form-group">
+                    <label class="form-label">Select Tone</label>
+                    <div class="tone-chips" role="radiogroup" aria-label="Response tone">
+                        <button class="tone-chip active" data-tone="warm" role="radio" aria-checked="true">
+                            <span class="tone-emoji">💙</span>
+                            <span class="tone-label">Warm</span>
+                        </button>
+                        <button class="tone-chip" data-tone="playful" role="radio" aria-checked="false">
+                            <span class="tone-emoji">😄</span>
+                            <span class="tone-label">Playful</span>
+                        </button>
+                        <button class="tone-chip" data-tone="curious" role="radio" aria-checked="false">
+                            <span class="tone-emoji">🤔</span>
+                            <span class="tone-label">Curious</span>
+                        </button>
+                        <button class="tone-chip" data-tone="supportive" role="radio" aria-checked="false">
+                            <span class="tone-emoji">🤗</span>
+                            <span class="tone-label">Supportive</span>
+                        </button>
+                        <button class="tone-chip" data-tone="brief" role="radio" aria-checked="false">
+                            <span class="tone-emoji">⚡</span>
+                            <span class="tone-label">Brief</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sliders -->
+                <div class="sliders-container">
+                    <div class="slider-group">
+                        <label for="sincerity-slider" class="form-label">Sincerity</label>
+                        <input type="range" id="sincerity-slider" class="slider" min="1" max="10" value="7" aria-describedby="sincerity-value">
+                        <span id="sincerity-value" class="slider-value">7</span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="directness-slider" class="form-label">Directness</label>
+                        <input type="range" id="directness-slider" class="slider" min="1" max="10" value="6" aria-describedby="directness-value">
+                        <span id="directness-value" class="slider-value">6</span>
+                    </div>
+                </div>
+
+                <button id="generate-btn" class="btn btn--primary btn--full-width">
+                    <span class="btn-text">Generate Suggestions</span>
+                    <span class="btn-loading hidden">Generating...</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Output Section -->
+        <section class="output-section">
+            <div class="results-header hidden">
+                <h2>Pick a reply. Make it yours.</h2>
+                <p class="results-subtitle">Choose the suggestion that feels most authentic to you</p>
+            </div>
+
+            <div class="suggestions-container" aria-live="polite">
+                <div class="suggestion-card card hidden" data-index="0">
+                    <div class="card__body">
+                        <div class="suggestion-text"></div>
+                        <div class="rationale-tags"></div>
+                        <div class="suggestion-actions">
+                            <button class="btn btn--secondary btn--sm copy-btn" data-index="0">Copy</button>
+                            <button class="btn btn--secondary btn--sm share-btn" data-index="0">Share</button>
+                            <button class="btn btn--outline btn--sm card-btn" data-index="0">Make Reply Card</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="suggestion-card card hidden" data-index="1">
+                    <div class="card__body">
+                        <div class="suggestion-text"></div>
+                        <div class="rationale-tags"></div>
+                        <div class="suggestion-actions">
+                            <button class="btn btn--secondary btn--sm copy-btn" data-index="1">Copy</button>
+                            <button class="btn btn--secondary btn--sm share-btn" data-index="1">Share</button>
+                            <button class="btn btn--outline btn--sm card-btn" data-index="1">Make Reply Card</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="suggestion-card card hidden" data-index="2">
+                    <div class="card__body">
+                        <div class="suggestion-text"></div>
+                        <div class="rationale-tags"></div>
+                        <div class="suggestion-actions">
+                            <button class="btn btn--secondary btn--sm copy-btn" data-index="2">Copy</button>
+                            <button class="btn btn--secondary btn--sm share-btn" data-index="2">Share</button>
+                            <button class="btn btn--outline btn--sm card-btn" data-index="2">Make Reply Card</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-skeleton hidden">
+                <div class="skeleton-card">
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-tags"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-tags"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-tags"></div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">💬</div>
+                <h3>Ready to spark conversation?</h3>
+                <p>Paste a friend's message above and select a tone to get personalized response suggestions.</p>
+                <div class="example-messages">
+                    <div class="example-message">
+                        <strong>Example:</strong> "Just got back from the most amazing hiking trip! The views were incredible."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reply Card Modal -->
+        <div id="card-modal" class="modal hidden" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Create Reply Card</h2>
+                    <button class="modal-close" aria-label="Close modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-customization">
+                        <div class="form-group">
+                            <label for="friend-name" class="form-label">Friend's Name (optional)</label>
+                            <input type="text" id="friend-name" class="form-control" placeholder="e.g., Sarah">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Card Theme</label>
+                            <div class="theme-selector">
+                                <button class="theme-option active" data-theme="ocean">Ocean</button>
+                                <button class="theme-option" data-theme="sunset">Sunset</button>
+                                <button class="theme-option" data-theme="forest">Forest</button>
+                                <button class="theme-option" data-theme="lavender">Lavender</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-preview">
+                        <canvas id="reply-canvas" width="540" height="675"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--secondary modal-cancel">Cancel</button>
+                    <button class="btn btn--primary" id="export-card">Export PNG</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-section">
+                <h3>Why private?</h3>
+                <p>Your conversations are personal. All text processing happens directly in your browser—nothing is sent to servers or stored in the cloud.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Keyboard Shortcuts</h3>
+                <ul class="keyboard-shortcuts">
+                    <li><kbd>Ctrl/Cmd + Enter</kbd> Generate suggestions</li>
+                    <li><kbd>1</kbd>, <kbd>2</kbd>, <kbd>3</kbd> Copy suggestion</li>
+                    <li><kbd>S</kbd> Share current selection</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <button id="accessibility-toggle" class="btn btn--outline btn--sm">
+                    Toggle High Contrast
+                </button>
+            </div>
+        </footer>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container" aria-live="polite"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
